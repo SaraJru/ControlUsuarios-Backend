@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /*Permite reconocer esta clase como una clase de Spring, agregandola al contenedor
 controller especial en RESTful especificacion
@@ -25,6 +26,13 @@ public class Controlador {
     
     @Autowired
     private UsuarioDao usuarioDao;
+    
+        
+    //Método para encriptar password
+    public static String encriptarPass(String password){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder.encode(password);
+    }
     
     
     @RequestMapping(value="Mostrar",method=RequestMethod.GET)
@@ -52,9 +60,16 @@ public class Controlador {
     @PostMapping(value="Crear")
     public ResponseEntity <Usuario> CrearUsuario(@RequestBody Usuario usuario){
         
-        Usuario nuevoUsuario = usuarioDao.save(usuario);
-        return ResponseEntity.ok(nuevoUsuario);
-        
+            Usuario nuevo = new Usuario ();
+            
+            String passEncriptado = encriptarPass(usuario.getPassword());
+            nuevo.setNombre(usuario.getNombre());
+            nuevo.setUsername(usuario.getUsername());
+            nuevo.setPassword(passEncriptado);
+            nuevo.setStatus(usuario.getStatus());
+            usuarioDao.save(nuevo);
+            return ResponseEntity.ok(nuevo);     
+            
     }
     
     @DeleteMapping(value="Eliminar/{UsuarioId}")
@@ -79,8 +94,8 @@ public class Controlador {
             return ResponseEntity.notFound().build();
         }
         
+        
+        
     }
     
 }
-
-
