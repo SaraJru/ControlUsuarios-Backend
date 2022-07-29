@@ -17,5 +17,6 @@ public class Usuario implements Serializable{
     private String nombre;
     private String username;
     private String password;
-   
+    
+    private Integer status = 1;
 }
