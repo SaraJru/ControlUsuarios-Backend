@@ -13,9 +13,8 @@ public class Usuario implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nombre;
+    @Column (nullable=false, unique=true)
     private String username;
-   
     private String password;
-    
     private Integer status = 1;
 }
