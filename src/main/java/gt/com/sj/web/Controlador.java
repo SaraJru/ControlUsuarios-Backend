@@ -21,6 +21,7 @@ controller especial en RESTful especificacion
 
 //manda info al log (Lombok)
 @Slf4j
+
 public class Controlador {
     
     
@@ -43,7 +44,7 @@ public class Controlador {
                
     }
     
-    @RequestMapping(value="{UsuarioId}",method=RequestMethod.GET)
+    @RequestMapping(value="Mostrar/{UsuarioId}",method=RequestMethod.GET)
     public ResponseEntity <Usuario> MostrarUsuarioId(@PathVariable("UsuarioId") int usuarioId){
         
         Optional<Usuario> usuario = usuarioDao.findById(usuarioId);
@@ -80,10 +81,10 @@ public class Controlador {
         return ResponseEntity.ok(null);
     }
     
-    @PatchMapping(value="CambiarStatus")
-    public ResponseEntity <Usuario> CambiarStatus(@RequestBody Usuario usuario){
+    @PatchMapping(value="CambiarStatus/{UsuarioId}")
+    public ResponseEntity <Usuario> CambiarStatus(@PathVariable ("UsuarioId") int usuarioId, @RequestBody Usuario usuario){
         
-        Optional <Usuario> usuarioActualizado = usuarioDao.findById(usuario.getId());
+        Optional <Usuario> usuarioActualizado = usuarioDao.findById(usuarioId);
         
         if(usuarioActualizado.isPresent()){
             Usuario actualizarUsuario = usuarioActualizado.get();
@@ -94,8 +95,7 @@ public class Controlador {
             return ResponseEntity.notFound().build();
         }
         
-        
-        
+            
     }
     
 }
